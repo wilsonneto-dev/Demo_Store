@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.9.1" />
+      <PackageReference Include="MediatR" Version="12.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\Domain.SeedWork\Domain.SeedWork.csproj" />
+      <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
     </ItemGroup>
 
 </Project>
