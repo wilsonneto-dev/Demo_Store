@@ -2,7 +2,7 @@ using Domain.SeedWork.Exceptions;
 
 namespace Domain.SeedWork.Validations;
 
-public class DomainValidation
+public static class DomainValidation
 {
     public static void NotNull(object? target, string fieldName, ValidationHandler? handler = null)
     {
