@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Shared", "src\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Infra.Data.EF", "src\Services\Catalog\Catalog.Infra.Data.EF\Catalog.Infra.Data.EF.csproj", "{7D9CD716-0FDA-43D3-B097-A98A2BDB788F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.APi", "src\Services\Catalog\Catalog.APi\Catalog.APi.csproj", "{8E62115C-D2EF-47DB-894C-7B9F98779CAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,7 @@ Global
 		{135AE3CC-003B-465A-94E3-5CF54F4A48D4} = {040401E8-707C-4803-BFCD-50B1165216D3}
 		{377707F9-4E94-4D58-86F6-7E20D0309B73} = {76304FC1-D022-466B-80A8-024F2D364BD9}
 		{7D9CD716-0FDA-43D3-B097-A98A2BDB788F} = {040401E8-707C-4803-BFCD-50B1165216D3}
+		{8E62115C-D2EF-47DB-894C-7B9F98779CAB} = {040401E8-707C-4803-BFCD-50B1165216D3}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2246CEDC-A545-443D-AD0B-8BDAB12EEFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,5 +53,9 @@ Global
 		{7D9CD716-0FDA-43D3-B097-A98A2BDB788F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D9CD716-0FDA-43D3-B097-A98A2BDB788F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D9CD716-0FDA-43D3-B097-A98A2BDB788F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E62115C-D2EF-47DB-894C-7B9F98779CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E62115C-D2EF-47DB-894C-7B9F98779CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E62115C-D2EF-47DB-894C-7B9F98779CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E62115C-D2EF-47DB-894C-7B9F98779CAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

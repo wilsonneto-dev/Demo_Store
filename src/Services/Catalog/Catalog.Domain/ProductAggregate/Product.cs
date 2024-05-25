@@ -6,10 +6,12 @@ namespace Catalog.Domain.ProductAggregate;
 
 public sealed class Product : AggregateRoot
 {
-    public string Name { get; private set; }
-    public decimal Price { get; private set; }
-    public string Description { get; private set; }
-    
+    public string Name { get; private set; } = "";
+    public decimal Price { get; private set; } = 0;
+    public string Description { get; private set; } = "";
+
+    public Product() {}
+
     public Product(string name, decimal price, string description)
     {
         Name = name;

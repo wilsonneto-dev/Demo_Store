@@ -2,7 +2,7 @@ namespace Catalog.Domain.ProductAggregate;
 
 public interface IProductRepository
 {
-    Task Insert(Product product);
-    Task<Product> Get(Guid id);
-    Task<IReadOnlyCollection<Product>> GetAll();
+    Task Insert(Product product, CancellationToken cancellationToken);
+    Task<Product?> Get(Guid id, CancellationToken cancellationToken);
+    Task<List<Product>> GetAll(CancellationToken cancellationToken);
 }
