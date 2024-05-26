@@ -1,8 +1,13 @@
+using Catalog.APi.ExceptionHandling;
+using Catalog.APi.ExceptionHandling.ExceptionMappers;
 using Catalog.Application;
+using Catalog.Application.Common.Exceptions;
 using Catalog.Application.UseCases.CreateProduct;
 using Catalog.Application.UseCases.GetProduct;
 using Catalog.Application.UseCases.ListProducts;
 using Catalog.Infra.Data.EF;
+using Domain.SeedWork.Exceptions;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -19,11 +24,21 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
         .EnableSensitiveDataLogging();
 });
 
+builder.Services.AddTransient<EntityValidationExceptionMapper>();
+builder.Services.AddTransient<NotFoundExceptionMapper>();
+builder.Services.AddSingleton<IExceptionMapperResolver, ExceptionMapperResolver>(p => 
+    new ExceptionMapperResolver(p, new Dictionary<Type, Type>()
+    {
+        { typeof(EntityValidationException), typeof(EntityValidationExceptionMapper) },
+        { typeof(NotFoundException), typeof(NotFoundExceptionMapper) }
+    }));
+
 var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference(cfg => cfg.EndpointPathPrefix = "docs");
 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
+app.UseMiddleware<ExceptionMiddleware>();
 
 var productsRouter = app.MapGroup("/products");
 
