@@ -25,4 +25,17 @@
       <ProjectReference Include="..\Catalog.Infra.Data.EF\Catalog.Infra.Data.EF.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="app\build\Application.Shared.deps.json" />
+      <_ContentIncludedByDefault Remove="app\build\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="app\build\appsettings.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.APi.deps.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.APi.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.APi.staticwebassets.endpoints.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.Application.deps.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.Domain.deps.json" />
+      <_ContentIncludedByDefault Remove="app\build\Catalog.Infra.Data.EF.deps.json" />
+      <_ContentIncludedByDefault Remove="app\build\Domain.SeedWork.deps.json" />
+    </ItemGroup>
+
 </Project>
