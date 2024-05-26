@@ -1,18 +1,22 @@
 using Catalog.APi.ExceptionHandling.ExceptionMappers;
-using Domain.SeedWork.Exceptions;
 
 namespace Catalog.APi.ExceptionHandling;
 
-public class ExceptionMapperResolver(
-    IServiceProvider serviceProvider,
-    Dictionary<Type, Type> exceptionHandlers)
-    : IExceptionMapperResolver
+public class ExceptionMapperResolver : IExceptionMapperResolver
 {
-    public IExceptionMapper<Exception> Resolve(Exception exception)
+    private readonly Dictionary<Type, IExceptionMapper> _exceptionHandlers;
+    private readonly IExceptionMapper _defaultMapper = new DefaultExceptionMapper();
+
+    public ExceptionMapperResolver(IEnumerable<IExceptionMapper> exceptionMappers)
     {
-        var exceptionType = exception.GetType();
-        if (exceptionHandlers.TryGetValue(exceptionType, out var handlerType))
-            return (IExceptionMapper<Exception>) serviceProvider.GetService(handlerType)!;
-        return new DefaultExceptionMapper();
+        _exceptionHandlers = new Dictionary<Type, IExceptionMapper>();
+        foreach (var mapper in exceptionMappers)
+            _exceptionHandlers.TryAdd(mapper.TargetType, mapper);
+    }
+
+    public IExceptionMapper Resolve(Exception exception)
+    {
+        if (_exceptionHandlers.TryGetValue(exception.GetType(), out var mapper)) ;
+        return mapper ?? _defaultMapper;
     }
 }

@@ -1,9 +1,12 @@
+using Catalog.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.APi.ExceptionHandling.ExceptionMappers;
 
-public class NotFoundExceptionMapper : IExceptionMapper<Exception>
+public class NotFoundExceptionMapper : IExceptionMapper
 {
+    public Type TargetType => typeof(NotFoundException);
+
     public ProblemDetails Map(Exception exception, bool isDevelopment)
     {
         var problemDetails = new ProblemDetails

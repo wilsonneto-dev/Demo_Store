@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.APi.ExceptionHandling;
 
-public interface IExceptionMapper<in T> where T : Exception
+public interface IExceptionMapper 
 {
-    ProblemDetails Map(T exception, bool isDevelopment);
+    Type TargetType { get; }
+    
+    ProblemDetails Map(Exception exception, bool isDevelopment);
 }

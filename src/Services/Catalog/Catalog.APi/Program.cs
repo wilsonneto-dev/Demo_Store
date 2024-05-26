@@ -24,14 +24,9 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
         .EnableSensitiveDataLogging();
 });
 
-builder.Services.AddTransient<EntityValidationExceptionMapper>();
-builder.Services.AddTransient<NotFoundExceptionMapper>();
-builder.Services.AddSingleton<IExceptionMapperResolver, ExceptionMapperResolver>(p => 
-    new ExceptionMapperResolver(p, new Dictionary<Type, Type>()
-    {
-        { typeof(EntityValidationException), typeof(EntityValidationExceptionMapper) },
-        { typeof(NotFoundException), typeof(NotFoundExceptionMapper) }
-    }));
+builder.Services.AddTransient<IExceptionMapper, EntityValidationExceptionMapper>();
+builder.Services.AddTransient<IExceptionMapper, NotFoundExceptionMapper>();
+builder.Services.AddSingleton<IExceptionMapperResolver, ExceptionMapperResolver>();
 
 var app = builder.Build();
 

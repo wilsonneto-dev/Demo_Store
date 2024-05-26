@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.APi.ExceptionHandling.ExceptionMappers;
 
-public class DefaultExceptionMapper : IExceptionMapper<Exception>
+public class DefaultExceptionMapper : IExceptionMapper
 {
+    public Type TargetType => typeof(Exception);
+
     public ProblemDetails Map(Exception exception, bool isDevelopment)
     {
         var problemDetails = new ProblemDetails
