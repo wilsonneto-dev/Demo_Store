@@ -1,26 +1,39 @@
 using Catalog.APi.ExceptionHandling;
 using Catalog.APi.ExceptionHandling.ExceptionMappers;
 using Catalog.Application;
-using Catalog.Application.Common.Exceptions;
 using Catalog.Application.UseCases.CreateProduct;
 using Catalog.Application.UseCases.GetProduct;
 using Catalog.Application.UseCases.ListProducts;
 using Catalog.Infra.Data.EF;
-using Domain.SeedWork.Exceptions;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NLog;
+using NLog.Web;
 using Scalar.AspNetCore;
 
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("init main");
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
 builder.Services.AddInfraData();
 
 builder.Services.AddDbContext<CatalogDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
-    options.LogTo(Console.WriteLine)
+    var dataStoreConnectionString = builder.Configuration.GetConnectionString("Database");
+    if (string.IsNullOrEmpty(dataStoreConnectionString))
+    {
+        options.UseInMemoryDatabase("in-memory");
+        return;
+    }
+
+    options.UseSqlServer(dataStoreConnectionString);
+    options.LogTo(log => logger.Info("Database: {log}", log))
         .EnableSensitiveDataLogging();
 });
 
