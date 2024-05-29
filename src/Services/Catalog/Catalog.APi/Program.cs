@@ -1,3 +1,4 @@
+using Catalog.APi;
 using Catalog.APi.ExceptionHandling;
 using Catalog.APi.ExceptionHandling.ExceptionMappers;
 using Catalog.Application;
@@ -47,6 +48,8 @@ app.MapOpenApi();
 app.MapScalarApiReference(cfg => cfg.EndpointPathPrefix = "docs");
 app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "v1"));
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseMiddleware<UserIdLoggerMiddleware>();
 
 var productsRouter = app.MapGroup("/products");
 
