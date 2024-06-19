@@ -16,7 +16,7 @@ public class ExceptionMapperResolver : IExceptionMapperResolver
 
     public IExceptionMapper Resolve(Exception exception)
     {
-        if (_exceptionHandlers.TryGetValue(exception.GetType(), out var mapper)) ;
+        _exceptionHandlers.TryGetValue(exception.GetType(), out var mapper);
         return mapper ?? _defaultMapper;
     }
 }

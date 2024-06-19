@@ -29,7 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Catalog.Application\Catalog.Application.csproj" />
-      <ProjectReference Include="..\Catalog.Infra.Data.EF\Catalog.Infra.Data.EF.csproj" />
+      <ProjectReference Include="..\Catalog.Data.InMemoryJson\Catalog.Data.InMemoryJson.csproj" />
     </ItemGroup>
 
     <ItemGroup>

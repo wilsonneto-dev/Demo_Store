@@ -3,11 +3,13 @@ using Catalog.APi.ExceptionHandling;
 using Catalog.APi.ExceptionHandling.ExceptionMappers;
 using Catalog.Application;
 using Catalog.Application.UseCases.CreateProduct;
+using Catalog.Application.UseCases.Disable;
+using Catalog.Application.UseCases.Enable;
 using Catalog.Application.UseCases.GetProduct;
 using Catalog.Application.UseCases.ListProducts;
-using Catalog.Infra.Data.EF;
+using Catalog.Application.UseCases.MoveStock;
+using Catalog.Data.InMemoryJson;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
 using Scalar.AspNetCore;
@@ -22,21 +24,7 @@ builder.Host.UseNLog();
 
 builder.Services.AddOpenApi();
 builder.Services.AddApplication();
-builder.Services.AddInfraData();
-
-builder.Services.AddDbContext<CatalogDbContext>(options =>
-{
-    var dataStoreConnectionString = builder.Configuration.GetConnectionString("Database");
-    if (string.IsNullOrEmpty(dataStoreConnectionString))
-    {
-        options.UseInMemoryDatabase("in-memory");
-        return;
-    }
-
-    options.UseSqlServer(dataStoreConnectionString);
-    options.LogTo(log => logger.Info("Database: {log}", log))
-        .EnableSensitiveDataLogging();
-});
+builder.Services.AddData();
 
 builder.Services.AddTransient<IExceptionMapper, EntityValidationExceptionMapper>();
 builder.Services.AddTransient<IExceptionMapper, NotFoundExceptionMapper>();
@@ -54,6 +42,15 @@ app.UseMiddleware<UserIdLoggerMiddleware>();
 var productsRouter = app.MapGroup("/products");
 
 productsRouter.MapPost("", async (CreateProductInput input, IMediator mediator, CancellationToken cancellationToken) => 
+    await mediator.Send(input, cancellationToken));
+
+productsRouter.MapPost("{id}/enable", async (string id, IMediator mediator, CancellationToken cancellationToken) => 
+    await mediator.Send(new EnableProductInput(new Guid(id)), cancellationToken));
+
+productsRouter.MapPost("{id}/disable", async (string id, CreateProductInput input, IMediator mediator, CancellationToken cancellationToken) => 
+    await mediator.Send(new DisableProductInput(new Guid(id)), cancellationToken));
+
+productsRouter.MapPost("/movements", async (MoveStockInput input, IMediator mediator, CancellationToken cancellationToken) => 
     await mediator.Send(input, cancellationToken));
 
 productsRouter.MapGet("", async (IMediator mediator, CancellationToken cancellationToken) =>

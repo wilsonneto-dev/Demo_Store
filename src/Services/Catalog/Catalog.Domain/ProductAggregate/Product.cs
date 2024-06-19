@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Domain.SeedWork;
 using Domain.SeedWork.Exceptions;
 using Domain.SeedWork.Validations;
@@ -10,6 +11,12 @@ public sealed class Product : AggregateRoot
     public decimal Price { get; private set; } = 0;
     public string Description { get; private set; } = "";
 
+    public int QuantityInStock { get; private set; }
+    public Status Status { get; private set; }
+    
+    public DateTime CreatedDate { get; }
+    public DateTime UpdatedDate { get; private set; }
+
     public Product() {}
 
     public Product(string name, decimal price, string description)
@@ -17,6 +24,11 @@ public sealed class Product : AggregateRoot
         Name = name;
         Price = price;
         Description = description;
+
+        QuantityInStock = 0;
+        CreatedDate = DateTime.Now;
+        UpdatedDate = DateTime.Now;
+        
         RaiseEvent(new ProductCreated(Id, Name, Price));
         Validate();
     }
@@ -26,8 +38,33 @@ public sealed class Product : AggregateRoot
         Name = name;
         Price = price;
         Description = description;
+        UpdatedDate = DateTime.Now;
         RaiseEvent(new ProductUpdated(Id, Name, price));
         Validate();
+    }
+
+    public void Activate()
+    {
+        UpdatedDate = DateTime.Now;
+        Status = Status.Active;
+    }
+
+    public void Deactivate()
+    {
+        UpdatedDate = DateTime.Now;
+        Status = Status.Disabled;
+    }
+
+    public void AddStock(int quantity)
+    {
+        UpdatedDate = DateTime.Now;
+        QuantityInStock += quantity;
+    }
+
+    public void RemoveStock(int quantity)
+    {
+        UpdatedDate = DateTime.Now;
+        QuantityInStock -= quantity;
     }
 
     private void Validate()
