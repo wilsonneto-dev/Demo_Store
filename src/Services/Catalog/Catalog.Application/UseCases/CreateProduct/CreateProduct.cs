@@ -3,6 +3,7 @@ using Catalog.Domain.ProductAggregate;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
+
 namespace Catalog.Application.UseCases.CreateProduct;
 
 public class CreateProduct(

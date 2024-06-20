@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Domain.SeedWork;
 using Domain.SeedWork.Exceptions;
 using Domain.SeedWork.Validations;
@@ -13,11 +12,9 @@ public sealed class Product : AggregateRoot
 
     public int QuantityInStock { get; private set; }
     public Status Status { get; private set; }
-    
-    public DateTime CreatedDate { get; }
-    public DateTime UpdatedDate { get; private set; }
 
-    public Product() {}
+    public DateTime CreatedDate { get; init; }
+    public DateTime UpdatedDate { get; private set; }
 
     public Product(string name, decimal price, string description)
     {
@@ -28,7 +25,7 @@ public sealed class Product : AggregateRoot
         QuantityInStock = 0;
         CreatedDate = DateTime.Now;
         UpdatedDate = DateTime.Now;
-        
+
         RaiseEvent(new ProductCreated(Id, Name, Price));
         Validate();
     }
@@ -78,4 +75,23 @@ public sealed class Product : AggregateRoot
             throw new EntityValidationException(
                 "Product validation failed", notificationHandler.Errors);
     }
-}
+    
+    public static Product Load(
+        Guid id,
+        string name,
+        string description,
+        decimal price,
+        int quantityInStock,
+        Status status,
+        DateTime createdDate,
+        DateTime updatedAt
+    ) => new(name, price, description)
+        {
+            Id = id,
+            QuantityInStock = quantityInStock,
+            Status = status,
+            CreatedDate = createdDate,
+            UpdatedDate = updatedAt,
+        };
+}    
+

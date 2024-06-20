@@ -2,7 +2,7 @@ namespace Domain.SeedWork;
 
 public abstract class Entity : IEquatable<Entity>
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; protected set; } = Guid.NewGuid();
 
     public bool Equals(Entity? other) => Equals((object?) other);
 
