@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Catalog.Domain.ProductAggregate;
-using Catalog.Domain.ProductAggregate.Loaders;
+using JsonNet.ContractResolvers;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -36,7 +36,13 @@ public class ProductRepository : IProductRepository
 
         // usoing json converters
         var productJson = JsonSerializer.Deserialize<Product>(json); // anottations
-        var productNewton = JsonConvert.DeserializeObject<Product>(json);
+        
+        var settings = new JsonSerializerSettings
+        {
+            ContractResolver = new PrivateSetterContractResolver()
+        };
+        
+        var productNewton = JsonConvert.DeserializeObject<Product>(json, settings);
         
         // custom converter
         var options = new JsonSerializerOptions
@@ -51,33 +57,12 @@ public class ProductRepository : IProductRepository
                 { "UpdatedDate", typeof(DateTime) }
             }) }
         };
+        
+        
+        
         var deserializedProductCustom = JsonSerializer.Deserialize<Product>(json, options);
         
-        // load method
-        var _product = Product.Load(
-                persistedObject.GetProperty("Id").GetGuid(),
-                persistedObject.GetProperty("Name").GetString()!,
-                persistedObject.GetProperty("Description").GetString()!,
-                persistedObject.GetProperty("Price").GetDecimal(),
-                persistedObject.GetProperty("QuantityInStock").GetInt32(),
-                (Status)persistedObject.GetProperty("Status").GetInt32(),
-                persistedObject.GetProperty("CreatedDate").GetDateTimeOffset().DateTime,
-                persistedObject.GetProperty("UpdatedDate").GetDateTimeOffset().DateTime
-            );
-        
-        // loader / builder
-        var product = ProductLoader.CreateLoader()
-            .WithId(persistedObject.GetProperty("Id").GetGuid())
-            .WithName(persistedObject.GetProperty("Name").GetString()!)
-            .WithDescription(persistedObject.GetProperty("Description").GetString()!)
-            .WithStatus((Status)persistedObject.GetProperty("Status").GetInt32())
-            .WithPrice(persistedObject.GetProperty("Price").GetDecimal())
-            .WithCreatedDate(persistedObject.GetProperty("CreatedDate").GetDateTimeOffset().DateTime)
-            .WithUpdatedDate(persistedObject.GetProperty("UpdatedDate").GetDateTimeOffset().DateTime)
-            .WithQuantityInStock(persistedObject.GetProperty("QuantityInStock").GetInt32())
-            .Load();
-        
-        return Task.FromResult<Product?>(product);
+        return Task.FromResult<Product?>(null);
     }
 
     public Task<List<Product>> GetAll(CancellationToken cancellationToken) => 
