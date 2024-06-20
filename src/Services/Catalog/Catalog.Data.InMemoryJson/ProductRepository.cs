@@ -34,9 +34,26 @@ public class ProductRepository : IProductRepository
         // extract the data from persistence to a DTO
         var persistedObject = JsonDocument.Parse(json).RootElement;
 
-        var productJson = JsonSerializer.Deserialize<Product>(json);
+        // usoing json converters
+        var productJson = JsonSerializer.Deserialize<Product>(json); // anottations
         var productNewton = JsonConvert.DeserializeObject<Product>(json);
-            
+        
+        // custom converter
+        var options = new JsonSerializerOptions
+        {
+            Converters = { new ProductJsonConverter(new Dictionary<string, Type>
+            {
+                { "Name", typeof(string) },
+                { "Price", typeof(decimal) },
+                { "Description", typeof(string) },
+                { "QuantityInStock", typeof(int) },
+                { "Status", typeof(Status) },
+                { "UpdatedDate", typeof(DateTime) }
+            }) }
+        };
+        var deserializedProductCustom = JsonSerializer.Deserialize<Product>(json, options);
+        
+        // load method
         var _product = Product.Load(
                 persistedObject.GetProperty("Id").GetGuid(),
                 persistedObject.GetProperty("Name").GetString()!,
@@ -47,8 +64,8 @@ public class ProductRepository : IProductRepository
                 persistedObject.GetProperty("CreatedDate").GetDateTimeOffset().DateTime,
                 persistedObject.GetProperty("UpdatedDate").GetDateTimeOffset().DateTime
             );
-      
         
+        // loader / builder
         var product = ProductLoader.CreateLoader()
             .WithId(persistedObject.GetProperty("Id").GetGuid())
             .WithName(persistedObject.GetProperty("Name").GetString()!)
