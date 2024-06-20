@@ -1,6 +1,8 @@
+using System.Text.Json.Serialization;
 using Domain.SeedWork;
 using Domain.SeedWork.Exceptions;
 using Domain.SeedWork.Validations;
+using Newtonsoft.Json;
 
 namespace Catalog.Domain.ProductAggregate;
 
@@ -10,10 +12,20 @@ public sealed class Product : AggregateRoot
     public decimal Price { get; private set; } = 0;
     public string Description { get; private set; } = "";
 
+    [JsonProperty]
+    [JsonInclude]
     public int QuantityInStock { get; private set; }
+
+    [JsonProperty]
+    [JsonInclude]
     public Status Status { get; private set; }
 
-    public DateTime CreatedDate { get; init; }
+    [JsonProperty]
+    [JsonInclude]
+    public DateTime CreatedDate { get; private set; }
+
+    [JsonProperty]
+    [JsonInclude]
     public DateTime UpdatedDate { get; private set; }
 
     public Product(string name, decimal price, string description)
@@ -85,7 +97,9 @@ public sealed class Product : AggregateRoot
         Status status,
         DateTime createdDate,
         DateTime updatedAt
-    ) => new(name, price, description)
+    )
+    {
+        return new Product(name, price, description)
         {
             Id = id,
             QuantityInStock = quantityInStock,
@@ -93,5 +107,8 @@ public sealed class Product : AggregateRoot
             CreatedDate = createdDate,
             UpdatedDate = updatedAt,
         };
+        
+        // Validation(); - possible post validation
+    }
 }    
 

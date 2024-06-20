@@ -1,6 +1,8 @@
 using System.Text.Json;
 using Catalog.Domain.ProductAggregate;
 using Catalog.Domain.ProductAggregate.Loaders;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Catalog.Data.InMemoryJson;
 
@@ -29,18 +31,23 @@ public class ProductRepository : IProductRepository
         if(!_data.TryGetValue(id.ToString(), out var json))
             return Task.FromResult<Product?>(null);
 
+        // extract the data from persistence to a DTO
         var persistedObject = JsonDocument.Parse(json).RootElement;
-        
+
+        var productJson = JsonSerializer.Deserialize<Product>(json);
+        var productNewton = JsonConvert.DeserializeObject<Product>(json);
+            
         var _product = Product.Load(
-            persistedObject.GetProperty("Id").GetGuid(),
-            persistedObject.GetProperty("Name").GetString()!,
-            persistedObject.GetProperty("Description").GetString()!,
-            persistedObject.GetProperty("Price").GetDecimal(),
-            persistedObject.GetProperty("QuantityInStock").GetInt32(),
-            (Status)persistedObject.GetProperty("Status").GetInt32(),
-            persistedObject.GetProperty("CreatedDate").GetDateTimeOffset().DateTime,
-            persistedObject.GetProperty("UpdatedDate").GetDateTimeOffset().DateTime
-        );
+                persistedObject.GetProperty("Id").GetGuid(),
+                persistedObject.GetProperty("Name").GetString()!,
+                persistedObject.GetProperty("Description").GetString()!,
+                persistedObject.GetProperty("Price").GetDecimal(),
+                persistedObject.GetProperty("QuantityInStock").GetInt32(),
+                (Status)persistedObject.GetProperty("Status").GetInt32(),
+                persistedObject.GetProperty("CreatedDate").GetDateTimeOffset().DateTime,
+                persistedObject.GetProperty("UpdatedDate").GetDateTimeOffset().DateTime
+            );
+      
         
         var product = ProductLoader.CreateLoader()
             .WithId(persistedObject.GetProperty("Id").GetGuid())
